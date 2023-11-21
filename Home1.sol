@@ -46,4 +46,20 @@ function createProposal(string memory _description) external onlyAdmin {
         proposals[id] = Proposal(id, _description, 0, 0, true);
         emit ProposalCreated(id, _description);
     }
+function vote(uint256 _proposalId, VoteOption _vote) external hasNotVoted {
+        require(proposals[_proposalId].isOpen, "Proposal is not open");
+        require(_vote == VoteOption.Yes || _vote == VoteOption.No, "Invalid vote option");
+
+        voters[msg.sender] = Voter(true, _vote);
+
+        proposals[_proposalId].voted[msg.sender] = true;
+
+        if (_vote == VoteOption.Yes) {
+            proposals[_proposalId].yesVotes++;
+        } else {
+            proposals[_proposalId].noVotes++;
+        }
+
+        emit VoteCasted(msg.sender, _proposalId, _vote);
+    }
 }
