@@ -41,5 +41,9 @@ contract DecentralizedVotingSystem {
     constructor() {
         admin = msg.sender;
     }
-
+function createProposal(string memory _description) external onlyAdmin {
+        uint256 id = proposalCount++;
+        proposals[id] = Proposal(id, _description, 0, 0, true);
+        emit ProposalCreated(id, _description);
+    }
 }
