@@ -62,4 +62,14 @@ function vote(uint256 _proposalId, VoteOption _vote) external hasNotVoted {
 
         emit VoteCasted(msg.sender, _proposalId, _vote);
     }
+function closeProposal(uint256 _proposalId) external onlyAdmin {
+        require(proposals[_proposalId].isOpen, "Proposal is already closed");
+
+        Proposal storage proposal = proposals[_proposalId];
+        proposal.isOpen = false;
+
+        bool passed = proposal.yesVotes > proposal.noVotes;
+
+        emit ProposalClosed(_proposalId, proposal.yesVotes, proposal.noVotes, passed);
+    }
 }
